@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/layout/app-sidebar";
 
 export default async function DashboardLayout({
@@ -11,16 +10,14 @@ export default async function DashboardLayout({
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
-  if (!user) {
-    redirect("/login");
-  }
+  if (!user) redirect("/login");
 
   return (
-    <SidebarProvider>
+    <div className="flex h-screen overflow-hidden">
       <AppSidebar />
-      <SidebarInset className="flex flex-col min-h-screen">
+      <div className="flex flex-col flex-1 min-w-0 overflow-y-auto">
         {children}
-      </SidebarInset>
-    </SidebarProvider>
+      </div>
+    </div>
   );
 }
