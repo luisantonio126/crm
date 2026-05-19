@@ -21,17 +21,18 @@ import {
 } from "@/components/ui/select";
 import { Loader2 } from "lucide-react";
 import { criarProjeto, atualizarProjeto, type ProjetoFormData } from "@/app/actions/projetos";
-import type { Projeto, Cliente } from "@/types";
+import type { Projeto, Cliente, Membro } from "@/types";
 
 interface ProjetoDialogProps {
   open: boolean;
   onClose: () => void;
   projeto?: Projeto;
   clientes: Cliente[];
+  membros: Membro[];
   statusInicial?: string;
 }
 
-export function ProjetoDialog({ open, onClose, projeto, clientes, statusInicial }: ProjetoDialogProps) {
+export function ProjetoDialog({ open, onClose, projeto, clientes, membros, statusInicial }: ProjetoDialogProps) {
   const isEditing = !!projeto;
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
@@ -40,6 +41,7 @@ export function ProjetoDialog({ open, onClose, projeto, clientes, statusInicial 
     nome: projeto?.nome ?? "",
     descricao: projeto?.descricao ?? "",
     cliente_id: projeto?.cliente_id ?? "",
+    membro_id: projeto?.membro_id ?? "",
     status: (projeto?.status ?? statusInicial ?? "backlog") as ProjetoFormData["status"],
     prioridade: projeto?.prioridade ?? "media",
     data_inicio: projeto?.data_inicio ?? "",
@@ -110,21 +112,39 @@ export function ProjetoDialog({ open, onClose, projeto, clientes, statusInicial 
             </div>
           </div>
 
-          <div className="flex flex-col gap-1.5">
-            <Label>Cliente</Label>
-            <Select value={form.cliente_id || "_none"} onValueChange={(v) => set("cliente_id", v === "_none" ? "" : v)}>
-              <SelectTrigger>
-                <span className="truncate text-sm">
-                  {clientes.find((c) => c.id === form.cliente_id)?.nome ?? <span className="text-muted-foreground">Nenhum</span>}
-                </span>
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="_none">Nenhum</SelectItem>
-                {clientes.map((c) => (
-                  <SelectItem key={c.id} value={c.id}>{c.nome}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="flex flex-col gap-1.5">
+              <Label>Cliente</Label>
+              <Select value={form.cliente_id || "_none"} onValueChange={(v) => set("cliente_id", v === "_none" ? "" : v)}>
+                <SelectTrigger>
+                  <span className="truncate text-sm">
+                    {clientes.find((c) => c.id === form.cliente_id)?.nome ?? <span className="text-muted-foreground">Nenhum</span>}
+                  </span>
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="_none">Nenhum</SelectItem>
+                  {clientes.map((c) => (
+                    <SelectItem key={c.id} value={c.id}>{c.nome}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <Label>Responsável</Label>
+              <Select value={form.membro_id || "_none"} onValueChange={(v) => set("membro_id", v === "_none" ? "" : v)}>
+                <SelectTrigger>
+                  <span className="truncate text-sm">
+                    {membros.find((m) => m.id === form.membro_id)?.nome ?? <span className="text-muted-foreground">Nenhum</span>}
+                  </span>
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="_none">Nenhum</SelectItem>
+                  {membros.map((m) => (
+                    <SelectItem key={m.id} value={m.id}>{m.nome}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">

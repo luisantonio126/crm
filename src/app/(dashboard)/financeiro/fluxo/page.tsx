@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TransacoesList } from "@/components/financeiro/transacoes-list";
 import { FluxoChart } from "@/components/financeiro/fluxo-chart";
 import { TrendingUp, TrendingDown, Wallet } from "lucide-react";
-import type { Transacao, Cliente, Projeto } from "@/types";
+import type { Transacao, Cliente, Projeto, Membro } from "@/types";
 
 function gerarDadosMensais(transacoes: Transacao[]) {
   const meses: Record<string, { receitas: number; despesas: number }> = {};
@@ -29,10 +29,11 @@ function gerarDadosMensais(transacoes: Transacao[]) {
 
 export default async function FluxoCaixaPage() {
   const supabase = await createClient();
-  const [{ data: transacoes }, { data: clientes }, { data: projetos }, { data: { user } }] = await Promise.all([
+  const [{ data: transacoes }, { data: clientes }, { data: projetos }, { data: membros }, { data: { user } }] = await Promise.all([
     supabase.from("transacoes").select("*").order("data_vencimento", { ascending: false }),
     supabase.from("clientes").select("id, nome").eq("ativo", true).order("nome"),
     supabase.from("projetos").select("id, nome").order("nome"),
+    supabase.from("membros").select("id, nome").eq("ativo", true).order("nome"),
     supabase.auth.getUser(),
   ]);
 
@@ -87,6 +88,7 @@ export default async function FluxoCaixaPage() {
           transacoes={tx}
           clientes={(clientes as Cliente[]) ?? []}
           projetos={(projetos as Projeto[]) ?? []}
+          membros={(membros as Membro[]) ?? []}
           titulo="Todos os Lançamentos"
         />
       </main>

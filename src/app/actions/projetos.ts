@@ -7,6 +7,7 @@ export type ProjetoFormData = {
   nome: string;
   descricao?: string;
   cliente_id?: string;
+  membro_id?: string;
   status: "backlog" | "em_andamento" | "revisao" | "concluido" | "cancelado";
   prioridade: "baixa" | "media" | "alta";
   data_inicio?: string;
@@ -21,6 +22,7 @@ export async function criarProjeto(data: ProjetoFormData) {
   const { error } = await supabase.from("projetos").insert({
     ...data,
     cliente_id: data.cliente_id || null,
+    membro_id: data.membro_id || null,
     valor_contrato: data.valor_contrato || null,
     created_by: user?.id,
   });
@@ -35,7 +37,7 @@ export async function atualizarProjeto(id: string, data: Partial<ProjetoFormData
 
   const { error } = await supabase
     .from("projetos")
-    .update({ ...data, cliente_id: data.cliente_id || null })
+    .update({ ...data, cliente_id: data.cliente_id || null, membro_id: data.membro_id || null })
     .eq("id", id);
 
   if (error) return { error: error.message };

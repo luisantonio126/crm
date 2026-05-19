@@ -19,7 +19,7 @@ import { KanbanColumn } from "./kanban-column";
 import { KanbanCard } from "./kanban-card";
 import { ProjetoDialog } from "./projeto-dialog";
 import { moverProjeto } from "@/app/actions/projetos";
-import type { Projeto, Cliente } from "@/types";
+import type { Projeto, Cliente, Membro } from "@/types";
 
 export const COLUNAS = [
   { id: "backlog", label: "Backlog", color: "text-muted-foreground" },
@@ -32,9 +32,10 @@ export const COLUNAS = [
 interface KanbanBoardProps {
   projetos: Projeto[];
   clientes: Cliente[];
+  membros: Membro[];
 }
 
-export function KanbanBoard({ projetos: initialProjetos, clientes }: KanbanBoardProps) {
+export function KanbanBoard({ projetos: initialProjetos, clientes, membros }: KanbanBoardProps) {
   const [projetos, setProjetos] = useState(initialProjetos);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -181,6 +182,7 @@ export function KanbanBoard({ projetos: initialProjetos, clientes }: KanbanBoard
         onClose={() => setDialogOpen(false)}
         projeto={editingProjeto}
         clientes={clientes}
+        membros={membros}
         statusInicial={statusInicial}
       />
     </>

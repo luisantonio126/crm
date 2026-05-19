@@ -1,14 +1,15 @@
 import { createClient } from "@/lib/supabase/server";
 import { Header } from "@/components/layout/header";
 import { KanbanBoard } from "@/components/projetos/kanban-board";
-import type { Projeto, Cliente } from "@/types";
+import type { Projeto, Cliente, Membro } from "@/types";
 
 export default async function ProjetosPage() {
   const supabase = await createClient();
 
-  const [{ data: projetos }, { data: clientes }, { data: { user } }] = await Promise.all([
+  const [{ data: projetos }, { data: clientes }, { data: membros }, { data: { user } }] = await Promise.all([
     supabase.from("projetos").select("*").order("created_at", { ascending: false }),
     supabase.from("clientes").select("id, nome").eq("ativo", true).order("nome"),
+    supabase.from("membros").select("id, nome").eq("ativo", true).order("nome"),
     supabase.auth.getUser(),
   ]);
 
@@ -19,6 +20,7 @@ export default async function ProjetosPage() {
         <KanbanBoard
           projetos={(projetos as Projeto[]) ?? []}
           clientes={(clientes as Cliente[]) ?? []}
+          membros={(membros as Membro[]) ?? []}
         />
       </main>
     </>

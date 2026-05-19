@@ -14,7 +14,7 @@ import {
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Loader2 } from "lucide-react";
 import { criarTransacao, atualizarTransacao, type TransacaoFormData } from "@/app/actions/transacoes";
-import type { Transacao, Cliente, Projeto } from "@/types";
+import type { Transacao, Cliente, Projeto, Membro } from "@/types";
 
 const CATEGORIAS_RECEITA = ["Vistoria", "Avaliação", "Outros"];
 const CATEGORIAS_DESPESA = ["Vistoria", "Avaliação", "Outros"];
@@ -26,9 +26,10 @@ interface TransacaoDialogProps {
   tipoInicial?: "receita" | "despesa";
   clientes: Cliente[];
   projetos: Projeto[];
+  membros: Membro[];
 }
 
-export function TransacaoDialog({ open, onClose, transacao, tipoInicial = "receita", clientes, projetos }: TransacaoDialogProps) {
+export function TransacaoDialog({ open, onClose, transacao, tipoInicial = "receita", clientes, projetos, membros }: TransacaoDialogProps) {
   const isEditing = !!transacao;
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
@@ -43,6 +44,7 @@ export function TransacaoDialog({ open, onClose, transacao, tipoInicial = "recei
     categoria: transacao?.categoria ?? "",
     projeto_id: transacao?.projeto_id ?? "",
     cliente_id: transacao?.cliente_id ?? "",
+    membro_id: transacao?.membro_id ?? "",
     observacoes: transacao?.observacoes ?? "",
   });
 
@@ -164,6 +166,21 @@ export function TransacaoDialog({ open, onClose, transacao, tipoInicial = "recei
                 </SelectContent>
               </Select>
             </div>
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+            <Label>Responsável</Label>
+            <Select value={form.membro_id || "_none"} onValueChange={(v) => set("membro_id", v === "_none" ? "" : v)}>
+              <SelectTrigger>
+                <span className="truncate text-sm">
+                  {membros.find((m) => m.id === form.membro_id)?.nome ?? <span className="text-muted-foreground">Nenhum</span>}
+                </span>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="_none">Nenhum</SelectItem>
+                {membros.map((m) => <SelectItem key={m.id} value={m.id}>{m.nome}</SelectItem>)}
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="flex flex-col gap-1.5">

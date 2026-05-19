@@ -2,10 +2,10 @@ import { createClient } from "@/lib/supabase/server";
 import { Header } from "@/components/layout/header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Users, KanbanSquare, TrendingUp, AlertCircle } from "lucide-react";
+import { Users, KanbanSquare, TrendingUp, AlertCircle, UserCircle2 } from "lucide-react";
 import { FluxoChart } from "@/components/financeiro/fluxo-chart";
 import { gerarNotificacoes } from "@/lib/notificacoes";
-import type { Transacao } from "@/types";
+import type { Transacao, Membro } from "@/types";
 
 function gerarDadosMensais(transacoes: Transacao[]) {
   const meses: Record<string, { receitas: number; despesas: number }> = {};
@@ -42,11 +42,15 @@ export default async function DashboardPage() {
     { count: totalClientes },
     { data: projetos },
     { data: transacoes },
+    { data: membros },
+    { data: todosProjetos },
     { data: { user } },
   ] = await Promise.all([
     supabase.from("clientes").select("*", { count: "exact", head: true }).eq("ativo", true),
     supabase.from("projetos").select("id, nome, status, cliente_id, data_previsao").not("status", "in", "(concluido,cancelado)").order("created_at", { ascending: false }).limit(5),
     supabase.from("transacoes").select("*").order("data_vencimento"),
+    supabase.from("membros").select("*").eq("ativo", true).order("nome"),
+    supabase.from("projetos").select("id, membro_id").not("status", "in", "(cancelado)"),
     supabase.auth.getUser(),
   ]);
 
@@ -65,6 +69,18 @@ export default async function DashboardPage() {
 
   const dadosMensais = gerarDadosMensais(tx);
   const fmt = (v: number) => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+
+  const membrosAtivos = (membros as Membro[]) ?? [];
+  const resumoEquipe = membrosAtivos.map((m) => {
+    const servicos = (todosProjetos ?? []).filter((p) => p.membro_id === m.id).length;
+    const faturado = tx
+      .filter((t) => t.tipo === "receita" && t.status === "pago" && t.membro_id === m.id)
+      .reduce((s, t) => s + t.valor, 0);
+    const aReceber = tx
+      .filter((t) => t.tipo === "receita" && t.status === "pendente" && t.membro_id === m.id)
+      .reduce((s, t) => s + t.valor, 0);
+    return { ...m, servicos, faturado, aReceber };
+  });
 
   const notificacoes = gerarNotificacoes(
     tx.filter((t) => t.status === "pendente"),
@@ -119,6 +135,46 @@ export default async function DashboardPage() {
             </CardContent>
           </Card>
         </div>
+
+        {resumoEquipe.length > 0 && (
+          <Card className="border-border/60">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-medium flex items-center gap-2">
+                <UserCircle2 className="w-4 h-4 text-primary" />
+                Resumo da Equipe
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {resumoEquipe.map((m) => (
+                  <div key={m.id} className="flex items-center gap-3 py-2 border-b border-border/40 last:border-0">
+                    <div className="w-7 h-7 rounded-md bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
+                      <UserCircle2 className="w-3.5 h-3.5 text-primary" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium truncate">{m.nome}</p>
+                      {m.cargo && <p className="text-[11px] text-muted-foreground">{m.cargo}</p>}
+                    </div>
+                    <div className="flex items-center gap-4 text-right shrink-0">
+                      <div>
+                        <p className="text-xs text-muted-foreground">Serviços</p>
+                        <p className="text-sm font-semibold">{m.servicos}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-muted-foreground">Faturado</p>
+                        <p className="text-sm font-semibold text-green-400">{fmt(m.faturado)}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-muted-foreground">A Receber</p>
+                        <p className="text-sm font-semibold text-yellow-400">{fmt(m.aReceber)}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <Card className="border-border/60">

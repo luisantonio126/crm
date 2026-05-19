@@ -17,12 +17,13 @@ import {
 import { Plus, Search, Pencil, Trash2, CheckCircle2, TrendingUp, TrendingDown } from "lucide-react";
 import { TransacaoDialog } from "./transacao-dialog";
 import { excluirTransacao, marcarComoPago } from "@/app/actions/transacoes";
-import type { Transacao, Cliente, Projeto } from "@/types";
+import type { Transacao, Cliente, Projeto, Membro } from "@/types";
 
 interface TransacoesListProps {
   transacoes: Transacao[];
   clientes: Cliente[];
   projetos: Projeto[];
+  membros: Membro[];
   tipoFiltro?: "receita" | "despesa";
   titulo: string;
 }
@@ -33,7 +34,7 @@ const statusBadge: Record<string, { label: string; variant: "default" | "seconda
   cancelado: { label: "Cancelado", variant: "destructive" },
 };
 
-export function TransacoesList({ transacoes, clientes, projetos, tipoFiltro, titulo }: TransacoesListProps) {
+export function TransacoesList({ transacoes, clientes, projetos, membros, tipoFiltro, titulo }: TransacoesListProps) {
   const [search, setSearch] = useState("");
   const [filtroStatus, setFiltroStatus] = useState("todos");
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -202,6 +203,7 @@ export function TransacoesList({ transacoes, clientes, projetos, tipoFiltro, tit
         tipoInicial={tipoFiltro}
         clientes={clientes}
         projetos={projetos}
+        membros={membros}
       />
 
       <AlertDialog open={!!deletingId} onOpenChange={(o) => !o && setDeletingId(null)}>

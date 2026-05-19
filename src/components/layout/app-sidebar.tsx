@@ -5,7 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard, Users, KanbanSquare, DollarSign,
   Calendar, Settings, Building2, LogOut,
-  MessageSquare, BarChart3,
+  MessageSquare, BarChart3, UsersRound,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
@@ -14,6 +14,7 @@ const navPrincipal = [
   { title: "Dashboard",  url: "/dashboard",  icon: LayoutDashboard },
   { title: "Clientes",   url: "/clientes",   icon: Users },
   { title: "Projetos",   url: "/projetos",   icon: KanbanSquare },
+  { title: "Equipe",     url: "/equipe",     icon: UsersRound },
   { title: "Calendário", url: "/calendario", icon: Calendar },
 ];
 

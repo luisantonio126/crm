@@ -27,6 +27,7 @@ export type Projeto = {
   data_previsao: string | null;
   data_conclusao: string | null;
   valor_contrato: number | null;
+  membro_id: string | null;
   created_by: string | null;
 };
 
@@ -56,9 +57,21 @@ export type Transacao = {
   categoria: string | null;
   projeto_id: string | null;
   cliente_id: string | null;
+  membro_id: string | null;
   observacoes: string | null;
   recorrente: boolean;
   created_by: string | null;
+};
+
+export type Membro = {
+  id: string;
+  created_at: string;
+  nome: string;
+  email: string | null;
+  cargo: string | null;
+  telefone: string | null;
+  ativo: boolean;
+  user_id: string;
 };
 
 export type Evento = {

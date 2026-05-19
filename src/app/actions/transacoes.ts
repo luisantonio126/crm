@@ -13,6 +13,7 @@ export type TransacaoFormData = {
   categoria?: string;
   projeto_id?: string;
   cliente_id?: string;
+  membro_id?: string;
   observacoes?: string;
   recorrente?: boolean;
 };
@@ -25,6 +26,7 @@ export async function criarTransacao(data: TransacaoFormData) {
     ...data,
     projeto_id: data.projeto_id || null,
     cliente_id: data.cliente_id || null,
+    membro_id: data.membro_id || null,
     data_pagamento: data.data_pagamento || null,
     created_by: user?.id,
   });
@@ -44,6 +46,7 @@ export async function atualizarTransacao(id: string, data: Partial<TransacaoForm
     ...data,
     projeto_id: data.projeto_id || null,
     cliente_id: data.cliente_id || null,
+    membro_id: data.membro_id || null,
     data_pagamento: data.data_pagamento || null,
   }).eq("id", id);
 
