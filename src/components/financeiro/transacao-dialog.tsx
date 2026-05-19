@@ -16,8 +16,8 @@ import { Loader2 } from "lucide-react";
 import { criarTransacao, atualizarTransacao, type TransacaoFormData } from "@/app/actions/transacoes";
 import type { Transacao, Cliente, Projeto } from "@/types";
 
-const CATEGORIAS_RECEITA = ["Contrato", "Medição", "Adiantamento", "Consultoria", "Outros"];
-const CATEGORIAS_DESPESA = ["Pessoal", "Material", "Equipamento", "Escritório", "Impostos", "Serviços", "Outros"];
+const CATEGORIAS_RECEITA = ["Vistoria", "Avaliação", "Outros"];
+const CATEGORIAS_DESPESA = ["Vistoria", "Avaliação", "Outros"];
 
 interface TransacaoDialogProps {
   open: boolean;
