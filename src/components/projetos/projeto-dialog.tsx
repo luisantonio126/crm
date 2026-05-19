@@ -87,7 +87,7 @@ export function ProjetoDialog({ open, onClose, projeto, clientes, membros, statu
           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col gap-1.5">
               <Label>Status</Label>
-              <Select value={form.status} onValueChange={(v) => set("status", v)}>
+              <Select value={form.status} onValueChange={(v) => { if (v) set("status", v); }}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="novo_lead">Novo Lead</SelectItem>
@@ -100,7 +100,7 @@ export function ProjetoDialog({ open, onClose, projeto, clientes, membros, statu
 
             <div className="flex flex-col gap-1.5">
               <Label>Prioridade</Label>
-              <Select value={form.prioridade} onValueChange={(v) => set("prioridade", v)}>
+              <Select value={form.prioridade} onValueChange={(v) => { if (v) set("prioridade", v); }}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="baixa">Baixa</SelectItem>
@@ -114,7 +114,7 @@ export function ProjetoDialog({ open, onClose, projeto, clientes, membros, statu
           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col gap-1.5">
               <Label>Cliente</Label>
-              <Select value={form.cliente_id || "_none"} onValueChange={(v) => set("cliente_id", v === "_none" ? "" : v)}>
+              <Select value={form.cliente_id || "_none"} onValueChange={(v) => set("cliente_id", (!v || v === "_none") ? "" : v)}>
                 <SelectTrigger>
                   <span className="truncate text-sm">
                     {clientes.find((c) => c.id === form.cliente_id)?.nome ?? <span className="text-muted-foreground">Nenhum</span>}
@@ -130,7 +130,7 @@ export function ProjetoDialog({ open, onClose, projeto, clientes, membros, statu
             </div>
             <div className="flex flex-col gap-1.5">
               <Label>Responsável</Label>
-              <Select value={form.membro_id || "_none"} onValueChange={(v) => set("membro_id", v === "_none" ? "" : v)}>
+              <Select value={form.membro_id || "_none"} onValueChange={(v) => set("membro_id", (!v || v === "_none") ? "" : v)}>
                 <SelectTrigger>
                   <span className="truncate text-sm">
                     {membros.find((m) => m.id === form.membro_id)?.nome ?? <span className="text-muted-foreground">Nenhum</span>}

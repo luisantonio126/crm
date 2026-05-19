@@ -83,7 +83,7 @@ export function EventoDialog({ open, onClose, evento, dataInicial, clientes, pro
 
           <div className="flex flex-col gap-1.5">
             <Label>Tipo</Label>
-            <Select value={form.tipo} onValueChange={(v) => set("tipo", v)}>
+            <Select value={form.tipo} onValueChange={(v) => { if (v) set("tipo", v); }}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
                 {TIPOS.map((t) => <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>)}
@@ -127,7 +127,7 @@ export function EventoDialog({ open, onClose, evento, dataInicial, clientes, pro
           <div className="grid grid-cols-2 gap-3">
             <div className="flex flex-col gap-1.5">
               <Label>Cliente</Label>
-              <Select value={form.cliente_id || "_none"} onValueChange={(v) => set("cliente_id", v === "_none" ? "" : v)}>
+              <Select value={form.cliente_id || "_none"} onValueChange={(v) => set("cliente_id", (!v || v === "_none") ? "" : v)}>
                 <SelectTrigger>
                   <span className="truncate text-sm">
                     {clientes.find((c) => c.id === form.cliente_id)?.nome ?? <span className="text-muted-foreground">Nenhum</span>}
@@ -141,7 +141,7 @@ export function EventoDialog({ open, onClose, evento, dataInicial, clientes, pro
             </div>
             <div className="flex flex-col gap-1.5">
               <Label>Projeto</Label>
-              <Select value={form.projeto_id || "_none"} onValueChange={(v) => set("projeto_id", v === "_none" ? "" : v)}>
+              <Select value={form.projeto_id || "_none"} onValueChange={(v) => set("projeto_id", (!v || v === "_none") ? "" : v)}>
                 <SelectTrigger>
                   <span className="truncate text-sm">
                     {projetos.find((p) => p.id === form.projeto_id)?.nome ?? <span className="text-muted-foreground">Nenhum</span>}

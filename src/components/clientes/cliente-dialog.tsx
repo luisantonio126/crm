@@ -86,7 +86,7 @@ export function ClienteDialog({ open, onClose, cliente }: ClienteDialogProps) {
 
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="tipo">Tipo</Label>
-              <Select value={form.tipo} onValueChange={(v) => set("tipo", v)}>
+              <Select value={form.tipo} onValueChange={(v) => { if (v) set("tipo", v); }}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -125,7 +125,7 @@ export function ClienteDialog({ open, onClose, cliente }: ClienteDialogProps) {
             <div className="grid grid-cols-2 gap-3">
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="estado">Estado</Label>
-                <Select value={form.estado} onValueChange={(v) => set("estado", v)}>
+                <Select value={form.estado} onValueChange={(v) => { if (v) set("estado", v); }}>
                   <SelectTrigger>
                     <SelectValue placeholder="UF" />
                   </SelectTrigger>

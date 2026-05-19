@@ -76,7 +76,7 @@ export function TransacaoDialog({ open, onClose, transacao, tipoInicial = "recei
 
         <form onSubmit={handleSubmit} className="space-y-4 py-2">
           {!isEditing && (
-            <Tabs value={form.tipo} onValueChange={(v) => set("tipo", v)}>
+            <Tabs value={form.tipo} onValueChange={(v) => { if (v) set("tipo", v); }}>
               <TabsList className="w-full">
                 <TabsTrigger value="receita" className="flex-1 data-[state=active]:text-green-400">Receita</TabsTrigger>
                 <TabsTrigger value="despesa" className="flex-1 data-[state=active]:text-red-400">Despesa</TabsTrigger>
@@ -101,7 +101,7 @@ export function TransacaoDialog({ open, onClose, transacao, tipoInicial = "recei
             </div>
             <div className="flex flex-col gap-1.5">
               <Label>{categoriaLabel}</Label>
-              <Select value={form.categoria || "_none"} onValueChange={(v) => set("categoria", v === "_none" ? "" : v)}>
+              <Select value={form.categoria || "_none"} onValueChange={(v) => set("categoria", (!v || v === "_none") ? "" : v)}>
                 <SelectTrigger>
                   <span className="truncate text-sm">
                     {form.categoria || <span className="text-muted-foreground">Nenhum</span>}
@@ -128,7 +128,7 @@ export function TransacaoDialog({ open, onClose, transacao, tipoInicial = "recei
 
           <div className="flex flex-col gap-1.5">
             <Label>Status</Label>
-            <Select value={form.status} onValueChange={(v) => set("status", v)}>
+            <Select value={form.status} onValueChange={(v) => { if (v) set("status", v); }}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="pendente">Pendente</SelectItem>
@@ -141,7 +141,7 @@ export function TransacaoDialog({ open, onClose, transacao, tipoInicial = "recei
           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col gap-1.5">
               <Label>Cliente</Label>
-              <Select value={form.cliente_id || "_none"} onValueChange={(v) => set("cliente_id", v === "_none" ? "" : v)}>
+              <Select value={form.cliente_id || "_none"} onValueChange={(v) => set("cliente_id", (!v || v === "_none") ? "" : v)}>
                 <SelectTrigger>
                   <span className="truncate text-sm">
                     {clientes.find((c) => c.id === form.cliente_id)?.nome ?? <span className="text-muted-foreground">Nenhum</span>}
@@ -155,7 +155,7 @@ export function TransacaoDialog({ open, onClose, transacao, tipoInicial = "recei
             </div>
             <div className="flex flex-col gap-1.5">
               <Label>Projeto</Label>
-              <Select value={form.projeto_id || "_none"} onValueChange={(v) => set("projeto_id", v === "_none" ? "" : v)}>
+              <Select value={form.projeto_id || "_none"} onValueChange={(v) => set("projeto_id", (!v || v === "_none") ? "" : v)}>
                 <SelectTrigger>
                   <span className="truncate text-sm">
                     {projetos.find((p) => p.id === form.projeto_id)?.nome ?? <span className="text-muted-foreground">Nenhum</span>}
@@ -171,7 +171,7 @@ export function TransacaoDialog({ open, onClose, transacao, tipoInicial = "recei
 
           <div className="flex flex-col gap-1.5">
             <Label>Responsável</Label>
-            <Select value={form.membro_id || "_none"} onValueChange={(v) => set("membro_id", v === "_none" ? "" : v)}>
+            <Select value={form.membro_id || "_none"} onValueChange={(v) => set("membro_id", (!v || v === "_none") ? "" : v)}>
               <SelectTrigger>
                 <span className="truncate text-sm">
                   {membros.find((m) => m.id === form.membro_id)?.nome ?? <span className="text-muted-foreground">Nenhum</span>}
