@@ -143,7 +143,11 @@ export function TransacoesList({ transacoes, clientes, projetos, tipoFiltro, tit
               </TableRow>
             ) : (
               filtered.map((t) => (
-                <TableRow key={t.id} className={`hover:bg-muted/20 ${isVencida(t) ? "bg-destructive/5" : ""}`}>
+                <TableRow
+                  key={t.id}
+                  className={`cursor-pointer hover:bg-muted/30 ${isVencida(t) ? "bg-destructive/5" : ""}`}
+                  onClick={() => openEdit(t)}
+                >
                   <TableCell className="font-medium text-sm">
                     {t.descricao}
                     {isVencida(t) && <span className="ml-2 text-[10px] text-destructive font-semibold">VENCIDA</span>}
@@ -167,7 +171,7 @@ export function TransacoesList({ transacoes, clientes, projetos, tipoFiltro, tit
                       {statusBadge[t.status].label}
                     </Badge>
                   </TableCell>
-                  <TableCell>
+                  <TableCell onClick={(e) => e.stopPropagation()}>
                     <div className="flex items-center gap-1">
                       {t.status === "pendente" && (
                         <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-green-400" title="Marcar como pago" onClick={() => handlePago(t.id)}>
@@ -191,6 +195,7 @@ export function TransacoesList({ transacoes, clientes, projetos, tipoFiltro, tit
       <p className="text-xs text-muted-foreground mt-2">{filtered.length} lançamentos</p>
 
       <TransacaoDialog
+        key={editando?.id ?? "novo"}
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}
         transacao={editando}
