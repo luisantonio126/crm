@@ -22,11 +22,10 @@ import { moverProjeto } from "@/app/actions/projetos";
 import type { Projeto, Cliente, Membro } from "@/types";
 
 export const COLUNAS = [
-  { id: "backlog", label: "Backlog", color: "text-muted-foreground" },
-  { id: "em_andamento", label: "Em Andamento", color: "text-blue-400" },
-  { id: "revisao", label: "Revisão", color: "text-yellow-400" },
-  { id: "concluido", label: "Concluído", color: "text-green-400" },
-  { id: "cancelado", label: "Cancelado", color: "text-destructive" },
+  { id: "novo_lead",         label: "Novo Lead",          color: "text-muted-foreground" },
+  { id: "avaliacao_marcada", label: "Avaliação Marcada",  color: "text-blue-400" },
+  { id: "laudo",             label: "Laudo",              color: "text-yellow-400" },
+  { id: "finalizado",        label: "Finalizado",         color: "text-green-400" },
 ] as const;
 
 interface KanbanBoardProps {
@@ -178,6 +177,7 @@ export function KanbanBoard({ projetos: initialProjetos, clientes, membros }: Ka
       </DndContext>
 
       <ProjetoDialog
+        key={editingProjeto?.id ?? "novo"}
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}
         projeto={editingProjeto}

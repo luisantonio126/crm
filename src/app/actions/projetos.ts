@@ -8,7 +8,7 @@ export type ProjetoFormData = {
   descricao?: string;
   cliente_id?: string;
   membro_id?: string;
-  status: "backlog" | "em_andamento" | "revisao" | "concluido" | "cancelado";
+  status: "novo_lead" | "avaliacao_marcada" | "laudo" | "finalizado";
   prioridade: "baixa" | "media" | "alta";
   data_inicio?: string;
   data_previsao?: string;

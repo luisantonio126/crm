@@ -21,7 +21,7 @@ export type Projeto = {
   nome: string;
   descricao: string | null;
   cliente_id: string | null;
-  status: "backlog" | "em_andamento" | "revisao" | "concluido" | "cancelado";
+  status: "novo_lead" | "avaliacao_marcada" | "laudo" | "finalizado";
   prioridade: "baixa" | "media" | "alta";
   data_inicio: string | null;
   data_previsao: string | null;

@@ -29,8 +29,8 @@ function gerarDadosMensais(transacoes: Transacao[]) {
 }
 
 const statusLabel: Record<string, string> = {
-  backlog: "Backlog", em_andamento: "Em Andamento", revisao: "Revisão",
-  concluido: "Concluído", cancelado: "Cancelado",
+  novo_lead: "Novo Lead", avaliacao_marcada: "Avaliação Marcada",
+  laudo: "Laudo", finalizado: "Finalizado",
 };
 
 export default async function DashboardPage() {
@@ -47,7 +47,7 @@ export default async function DashboardPage() {
     { data: { user } },
   ] = await Promise.all([
     supabase.from("clientes").select("*", { count: "exact", head: true }).eq("ativo", true),
-    supabase.from("projetos").select("id, nome, status, cliente_id, data_previsao").not("status", "in", "(concluido,cancelado)").order("created_at", { ascending: false }).limit(5),
+    supabase.from("projetos").select("id, nome, status, cliente_id, data_previsao").not("status", "eq", "finalizado").order("created_at", { ascending: false }).limit(5),
     supabase.from("transacoes").select("*").order("data_vencimento"),
     supabase.from("membros").select("*").eq("ativo", true).order("nome"),
     supabase.from("projetos").select("id, membro_id").not("status", "in", "(cancelado)"),

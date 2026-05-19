@@ -42,7 +42,7 @@ export function ProjetoDialog({ open, onClose, projeto, clientes, membros, statu
     descricao: projeto?.descricao ?? "",
     cliente_id: projeto?.cliente_id ?? "",
     membro_id: projeto?.membro_id ?? "",
-    status: (projeto?.status ?? statusInicial ?? "backlog") as ProjetoFormData["status"],
+    status: (projeto?.status ?? statusInicial ?? "novo_lead") as ProjetoFormData["status"],
     prioridade: projeto?.prioridade ?? "media",
     data_inicio: projeto?.data_inicio ?? "",
     data_previsao: projeto?.data_previsao ?? "",
@@ -90,11 +90,10 @@ export function ProjetoDialog({ open, onClose, projeto, clientes, membros, statu
               <Select value={form.status} onValueChange={(v) => set("status", v)}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="backlog">Backlog</SelectItem>
-                  <SelectItem value="em_andamento">Em Andamento</SelectItem>
-                  <SelectItem value="revisao">Revisão</SelectItem>
-                  <SelectItem value="concluido">Concluído</SelectItem>
-                  <SelectItem value="cancelado">Cancelado</SelectItem>
+                  <SelectItem value="novo_lead">Novo Lead</SelectItem>
+                  <SelectItem value="avaliacao_marcada">Avaliação Marcada</SelectItem>
+                  <SelectItem value="laudo">Laudo</SelectItem>
+                  <SelectItem value="finalizado">Finalizado</SelectItem>
                 </SelectContent>
               </Select>
             </div>
