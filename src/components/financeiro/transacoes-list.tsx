@@ -117,7 +117,7 @@ export function TransacoesList({ transacoes, clientes, projetos, membros, tipoFi
         </Select>
         <Button size="sm" className="gap-2" onClick={openNew}>
           <Plus className="w-4 h-4" />
-          {tipoFiltro === "receita" ? "Nova Receita" : "Nova Despesa"}
+          Novo Lançamento
         </Button>
       </div>
 
