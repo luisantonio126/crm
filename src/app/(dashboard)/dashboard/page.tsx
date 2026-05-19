@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { Header } from "@/components/layout/header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Users, KanbanSquare, TrendingUp, AlertCircle, UserCircle2 } from "lucide-react";
+import { KanbanSquare, TrendingUp, TrendingDown, AlertCircle, UserCircle2, CheckCircle2 } from "lucide-react";
 import { FluxoChart } from "@/components/financeiro/fluxo-chart";
 import { gerarNotificacoes } from "@/lib/notificacoes";
 import type { Transacao, Membro } from "@/types";
@@ -39,15 +39,15 @@ export default async function DashboardPage() {
   const em7dias = new Date(hoje); em7dias.setDate(hoje.getDate() + 7);
 
   const [
-    { count: totalClientes },
     { data: projetos },
+    { count: projetosFinalizados },
     { data: transacoes },
     { data: membros },
     { data: todosProjetos },
     { data: { user } },
   ] = await Promise.all([
-    supabase.from("clientes").select("*", { count: "exact", head: true }).eq("ativo", true),
     supabase.from("projetos").select("id, nome, status, cliente_id, data_previsao").not("status", "eq", "finalizado").order("created_at", { ascending: false }).limit(5),
+    supabase.from("projetos").select("*", { count: "exact", head: true }).eq("status", "finalizado"),
     supabase.from("transacoes").select("*").order("data_vencimento"),
     supabase.from("membros").select("*").eq("ativo", true).order("nome"),
     supabase.from("projetos").select("id, membro_id").not("status", "in", "(cancelado)"),
@@ -57,6 +57,12 @@ export default async function DashboardPage() {
   const tx = (transacoes as Transacao[]) ?? [];
   const receitaMes = tx
     .filter((t) => t.tipo === "receita" && t.status === "pago" &&
+      new Date(t.data_pagamento || t.data_vencimento).getMonth() === hoje.getMonth() &&
+      new Date(t.data_pagamento || t.data_vencimento).getFullYear() === hoje.getFullYear())
+    .reduce((s, t) => s + t.valor, 0);
+
+  const despesasMes = tx
+    .filter((t) => t.tipo === "despesa" && t.status === "pago" &&
       new Date(t.data_pagamento || t.data_vencimento).getMonth() === hoje.getMonth() &&
       new Date(t.data_pagamento || t.data_vencimento).getFullYear() === hoje.getFullYear())
     .reduce((s, t) => s + t.valor, 0);
@@ -91,17 +97,7 @@ export default async function DashboardPage() {
     <>
       <Header title="Dashboard" userEmail={user?.email} notificacoes={notificacoes} />
       <main className="flex-1 p-6 space-y-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Card className="border-border/60">
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Clientes Ativos</CardTitle>
-              <div className="p-1.5 rounded-md bg-primary/10"><Users className="w-4 h-4 text-primary" /></div>
-            </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold">{totalClientes ?? 0}</p>
-              <p className="text-xs text-muted-foreground mt-1">clientes cadastrados</p>
-            </CardContent>
-          </Card>
+        <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
           <Card className="border-border/60">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">Projetos Ativos</CardTitle>
@@ -114,12 +110,32 @@ export default async function DashboardPage() {
           </Card>
           <Card className="border-border/60">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Projetos Finalizados</CardTitle>
+              <div className="p-1.5 rounded-md bg-green-400/10"><CheckCircle2 className="w-4 h-4 text-green-400" /></div>
+            </CardHeader>
+            <CardContent>
+              <p className="text-2xl font-bold text-green-400">{projetosFinalizados ?? 0}</p>
+              <p className="text-xs text-muted-foreground mt-1">concluídos</p>
+            </CardContent>
+          </Card>
+          <Card className="border-border/60">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">Receita do Mês</CardTitle>
               <div className="p-1.5 rounded-md bg-green-400/10"><TrendingUp className="w-4 h-4 text-green-400" /></div>
             </CardHeader>
             <CardContent>
               <p className="text-2xl font-bold text-green-400">{fmt(receitaMes)}</p>
               <p className="text-xs text-muted-foreground mt-1">recebido no mês</p>
+            </CardContent>
+          </Card>
+          <Card className="border-border/60">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Despesas do Mês</CardTitle>
+              <div className="p-1.5 rounded-md bg-red-400/10"><TrendingDown className="w-4 h-4 text-red-400" /></div>
+            </CardHeader>
+            <CardContent>
+              <p className="text-2xl font-bold text-red-400">{fmt(despesasMes)}</p>
+              <p className="text-xs text-muted-foreground mt-1">pago no mês</p>
             </CardContent>
           </Card>
           <Card className="border-border/60">
