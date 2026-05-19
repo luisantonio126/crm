@@ -216,7 +216,16 @@ export function CalendarView({ eventos, transacoes, projetos, clientes }: Calend
               <p className="text-xs text-muted-foreground text-center py-8">Nenhum evento este mês</p>
             ) : (
               itensMes.map((item) => (
-                <div key={item.id} className="flex items-start gap-2 p-2 rounded-lg border border-border/40 hover:bg-muted/20 transition-colors">
+                <div
+                  key={item.id}
+                  className={`flex items-start gap-2 p-2 rounded-lg border border-border/40 hover:bg-muted/20 transition-colors ${item.origem === "evento" ? "cursor-pointer" : ""}`}
+                  onClick={() => {
+                    if (item.origem === "evento" && item.raw) {
+                      setEditando(item.raw);
+                      setDialogOpen(true);
+                    }
+                  }}
+                >
                   <div className={`w-1.5 h-1.5 rounded-full mt-1.5 shrink-0 ${tipoColor[item.tipo]}`} />
                   <div className="flex-1 min-w-0">
                     <p className="text-xs font-medium truncate">{item.titulo}</p>
@@ -233,6 +242,7 @@ export function CalendarView({ eventos, transacoes, projetos, clientes }: Calend
       </div>
 
       <EventoDialog
+        key={editando?.id ?? "novo"}
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}
         evento={editando}

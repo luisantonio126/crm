@@ -52,8 +52,9 @@ export function KanbanCard({ projeto, clienteMap, onEdit, isDragging }: KanbanCa
     <Card
       ref={setNodeRef}
       style={style}
-      className={`border-border/50 cursor-default group hover:border-primary/30 transition-colors ${
-        isDragging ? "shadow-lg ring-1 ring-primary/30" : ""
+      onClick={() => !isDragging && onEdit(projeto)}
+      className={`border-border/50 cursor-pointer group hover:border-primary/30 transition-colors ${
+        isDragging ? "shadow-lg ring-1 ring-primary/30 cursor-grabbing" : ""
       }`}
     >
       <CardContent className="p-3 space-y-2">
@@ -61,6 +62,7 @@ export function KanbanCard({ projeto, clienteMap, onEdit, isDragging }: KanbanCa
           <button
             {...attributes}
             {...listeners}
+            onClick={(e) => e.stopPropagation()}
             className="mt-0.5 text-muted-foreground/40 hover:text-muted-foreground cursor-grab active:cursor-grabbing shrink-0"
           >
             <GripVertical className="w-3.5 h-3.5" />

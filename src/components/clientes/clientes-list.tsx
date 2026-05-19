@@ -103,7 +103,7 @@ export function ClientesList({ clientes }: ClientesListProps) {
               </TableRow>
             ) : (
               filtered.map((cliente) => (
-                <TableRow key={cliente.id} className="hover:bg-muted/20">
+                <TableRow key={cliente.id} className="hover:bg-muted/30 cursor-pointer" onClick={() => openEdit(cliente)}>
                   <TableCell className="font-medium">
                     <div className="flex items-center gap-2">
                       <div className="w-7 h-7 rounded-md bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
@@ -132,7 +132,7 @@ export function ClientesList({ clientes }: ClientesListProps) {
                       {cliente.ativo ? "Ativo" : "Inativo"}
                     </Badge>
                   </TableCell>
-                  <TableCell>
+                  <TableCell onClick={(e) => e.stopPropagation()}>
                     <div className="flex items-center gap-1">
                       <Button variant="ghost" size="icon" className="h-7 w-7" asChild>
                         <Link href={`/clientes/${cliente.id}`}>
@@ -164,6 +164,7 @@ export function ClientesList({ clientes }: ClientesListProps) {
       </p>
 
       <ClienteDialog
+        key={editingCliente?.id ?? "novo"}
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}
         cliente={editingCliente}
