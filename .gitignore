@@ -30,12 +30,13 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files — nunca sobe o .env.local (contém segredos reais)
+# env files — nunca sobem arquivos com segredos reais
 .env
 .env.local
 .env.*.local
 .env.production
-# .env.example é permitido (sem valores reais)
+.env.local.example
+# .env.example é permitido (só placeholders, sem valores reais)
 
 # vercel
 .vercel
