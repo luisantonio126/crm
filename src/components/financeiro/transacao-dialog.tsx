@@ -17,7 +17,7 @@ import { criarTransacao, atualizarTransacao, type TransacaoFormData } from "@/ap
 import type { Transacao, Cliente, Projeto, Membro } from "@/types";
 
 const CATEGORIAS_RECEITA = ["Vistoria", "Avaliação", "Outros"];
-const TIPOS_DESPESA = ["Imposto", "ART", "Marketing", "Contador", "Outros"];
+const TIPOS_DESPESA = ["Imposto", "ART", "Marketing", "Contador", "Anuidade", "Outros"];
 
 interface TransacaoDialogProps {
   open: boolean;
