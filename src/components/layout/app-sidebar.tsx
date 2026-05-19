@@ -8,7 +8,6 @@ import {
   KanbanSquare,
   DollarSign,
   Calendar,
-  FileText,
   Settings,
   Building2,
   LogOut,
@@ -31,19 +30,20 @@ import {
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 
-const navMain = [
-  { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
-  { title: "Clientes", url: "/clientes", icon: Users },
-  { title: "Projetos", url: "/projetos", icon: KanbanSquare },
+const navPrincipal = [
+  { title: "Dashboard",  url: "/dashboard",  icon: LayoutDashboard },
+  { title: "Clientes",   url: "/clientes",   icon: Users },
+  { title: "Projetos",   url: "/projetos",   icon: KanbanSquare },
   { title: "Calendário", url: "/calendario", icon: Calendar },
-  { title: "Mensagens", url: "/chat", icon: MessageSquare },
-  { title: "Relatórios", url: "/relatorios", icon: BarChart3 },
 ];
 
 const navFinanceiro = [
   { title: "Fluxo de Caixa", url: "/financeiro/fluxo", icon: DollarSign },
-  { title: "Contas a Receber", url: "/financeiro/receber", icon: FileText },
-  { title: "Contas a Pagar", url: "/financeiro/pagar", icon: FileText },
+];
+
+const navOutros = [
+  { title: "Mensagens",  url: "/chat",       icon: MessageSquare },
+  { title: "Relatórios", url: "/relatorios", icon: BarChart3 },
 ];
 
 export function AppSidebar() {
@@ -57,15 +57,19 @@ export function AppSidebar() {
     router.refresh();
   }
 
+  function isActive(url: string) {
+    return pathname === url || pathname.startsWith(url + "/");
+  }
+
   return (
-    <Sidebar>
-      <SidebarHeader className="px-4 py-4">
-        <div className="flex items-center gap-2.5">
-          <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/15 border border-primary/25">
+    <Sidebar collapsible="icon">
+      <SidebarHeader className="px-3 py-4">
+        <div className="flex items-center gap-3">
+          <div className="flex items-center justify-center w-8 h-8 shrink-0 rounded-lg bg-primary/15 border border-primary/25">
             <Building2 className="w-4 h-4 text-primary" />
           </div>
-          <div className="flex flex-col leading-tight">
-            <span className="text-sm font-semibold text-sidebar-foreground">Oliveira Nunes</span>
+          <div className="flex flex-col leading-tight overflow-hidden">
+            <span className="text-sm font-semibold text-sidebar-foreground truncate">Oliveira Nunes</span>
             <span className="text-xs text-muted-foreground">Engenharia</span>
           </div>
         </div>
@@ -73,17 +77,14 @@ export function AppSidebar() {
 
       <SidebarSeparator />
 
-      <SidebarContent>
+      <SidebarContent className="gap-0">
         <SidebarGroup>
           <SidebarGroupLabel>Principal</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {navMain.map((item) => (
+              {navPrincipal.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton
-                    asChild
-                    isActive={pathname === item.url || pathname.startsWith(item.url + "/")}
-                  >
+                  <SidebarMenuButton asChild isActive={isActive(item.url)} tooltip={item.title}>
                     <Link href={item.url}>
                       <item.icon />
                       <span>{item.title}</span>
@@ -101,10 +102,25 @@ export function AppSidebar() {
             <SidebarMenu>
               {navFinanceiro.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton
-                    asChild
-                    isActive={pathname === item.url}
-                  >
+                  <SidebarMenuButton asChild isActive={isActive(item.url)} tooltip={item.title}>
+                    <Link href={item.url}>
+                      <item.icon />
+                      <span>{item.title}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <SidebarGroup>
+          <SidebarGroupLabel>Outros</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {navOutros.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild isActive={isActive(item.url)} tooltip={item.title}>
                     <Link href={item.url}>
                       <item.icon />
                       <span>{item.title}</span>
@@ -121,7 +137,7 @@ export function AppSidebar() {
         <SidebarSeparator />
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild isActive={pathname === "/configuracoes"}>
+            <SidebarMenuButton asChild isActive={isActive("/configuracoes")} tooltip="Configurações">
               <Link href="/configuracoes">
                 <Settings />
                 <span>Configurações</span>
@@ -129,7 +145,11 @@ export function AppSidebar() {
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            <SidebarMenuButton onClick={handleLogout} className="text-muted-foreground hover:text-destructive">
+            <SidebarMenuButton
+              onClick={handleLogout}
+              tooltip="Sair"
+              className="text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+            >
               <LogOut />
               <span>Sair</span>
             </SidebarMenuButton>
