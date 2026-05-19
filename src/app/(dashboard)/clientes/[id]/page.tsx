@@ -4,7 +4,8 @@ import { createClient } from "@/lib/supabase/server";
 import { Header } from "@/components/layout/header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { Building2, User, Mail, Phone, MapPin, FileText, KanbanSquare, ArrowLeft } from "lucide-react";
 import type { Cliente, Projeto } from "@/types";
 
@@ -48,12 +49,10 @@ export default async function ClientePerfilPage({ params }: { params: Promise<{ 
     <>
       <Header title={c.nome} userEmail={user?.email} />
       <main className="flex-1 p-6 space-y-6">
-        <Button variant="ghost" size="sm" asChild className="gap-2 -ml-2">
-          <Link href="/clientes">
-            <ArrowLeft className="w-4 h-4" />
-            Voltar para Clientes
-          </Link>
-        </Button>
+        <Link href="/clientes" className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "gap-2 -ml-2")}>
+          <ArrowLeft className="w-4 h-4" />
+          Voltar para Clientes
+        </Link>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           {/* Dados do cliente */}
