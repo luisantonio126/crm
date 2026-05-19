@@ -17,7 +17,7 @@ import { criarTransacao, atualizarTransacao, type TransacaoFormData } from "@/ap
 import type { Transacao, Cliente, Projeto, Membro } from "@/types";
 
 const CATEGORIAS_RECEITA = ["Vistoria", "Avaliação", "Outros"];
-const CATEGORIAS_DESPESA = ["Vistoria", "Avaliação", "Outros"];
+const TIPOS_DESPESA = ["Imposto", "ART", "Marketing", "Contador", "Outros"];
 
 interface TransacaoDialogProps {
   open: boolean;
@@ -52,7 +52,8 @@ export function TransacaoDialog({ open, onClose, transacao, tipoInicial = "recei
     setForm((prev) => ({ ...prev, [field]: value }));
   }
 
-  const categorias = form.tipo === "receita" ? CATEGORIAS_RECEITA : CATEGORIAS_DESPESA;
+  const categorias = form.tipo === "receita" ? CATEGORIAS_RECEITA : TIPOS_DESPESA;
+  const categoriaLabel = form.tipo === "receita" ? "Categoria" : "Tipo";
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -99,7 +100,7 @@ export function TransacaoDialog({ open, onClose, transacao, tipoInicial = "recei
               />
             </div>
             <div className="flex flex-col gap-1.5">
-              <Label>Categoria</Label>
+              <Label>{categoriaLabel}</Label>
               <Select value={form.categoria || "_none"} onValueChange={(v) => set("categoria", v === "_none" ? "" : v)}>
                 <SelectTrigger>
                   <span className="truncate text-sm">
