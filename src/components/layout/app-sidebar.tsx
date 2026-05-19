@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard, Users, KanbanSquare, DollarSign,
-  Calendar, Settings, Building2, LogOut,
+  Calendar, Settings, LogOut,
   MessageSquare, BarChart3, UsersRound,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
@@ -75,14 +76,8 @@ export function AppSidebar() {
   return (
     <aside className="hidden md:flex flex-col w-52 shrink-0 bg-sidebar border-r border-sidebar-border h-screen sticky top-0">
       {/* Logo */}
-      <div className="flex items-center gap-3 px-4 py-4 border-b border-sidebar-border">
-        <div className="flex items-center justify-center w-8 h-8 shrink-0 rounded-lg bg-primary/15 border border-primary/25">
-          <Building2 className="w-4 h-4 text-primary" />
-        </div>
-        <div className="flex flex-col leading-tight min-w-0">
-          <span className="text-sm font-semibold text-sidebar-foreground truncate">Oliveira Nunes</span>
-          <span className="text-xs text-muted-foreground">Engenharia</span>
-        </div>
+      <div className="flex items-center justify-center px-4 py-4 border-b border-sidebar-border">
+        <Image src="/logo.png" alt="Oliveira Nunes Engenharia" width={140} height={60} className="object-contain" />
       </div>
 
       {/* Nav */}
