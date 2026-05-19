@@ -37,8 +37,8 @@ export function FluxoChart({ dados }: FluxoChartProps) {
         <XAxis dataKey="mes" tick={{ fontSize: 11, fill: "#888" }} axisLine={false} tickLine={false} />
         <YAxis tickFormatter={(v) => `R$${(v / 1000).toFixed(0)}k`} tick={{ fontSize: 11, fill: "#888" }} axisLine={false} tickLine={false} width={55} />
         <Tooltip
-          formatter={(value: number, name: string) => [
-            formatBRL(value),
+          formatter={(value, name) => [
+            formatBRL(Number(value)),
             name === "receitas" ? "Receitas" : name === "despesas" ? "Despesas" : "Saldo",
           ]}
           contentStyle={{ background: "#1e1a17", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, fontSize: 12 }}

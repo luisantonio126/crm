@@ -144,7 +144,7 @@ export function RelatoriosClient({ transacoes, clientes, projetos }: RelatoriosC
         </Button>
       </div>
 
-      <Tabs value={tab} onValueChange={setTab}>
+      <Tabs value={tab} onValueChange={(v) => { if (v) setTab(v); }}>
         <TabsList>
           <TabsTrigger value="financeiro" className="gap-2"><TrendingUp className="w-3.5 h-3.5" /> Financeiro</TabsTrigger>
           <TabsTrigger value="projetos" className="gap-2"><KanbanSquare className="w-3.5 h-3.5" /> Projetos</TabsTrigger>
@@ -180,7 +180,7 @@ export function RelatoriosClient({ transacoes, clientes, projetos }: RelatoriosC
                     <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
                     <XAxis dataKey="mes" tick={{ fontSize: 11, fill: "#888" }} axisLine={false} tickLine={false} />
                     <YAxis tickFormatter={(v) => `R$${(v/1000).toFixed(0)}k`} tick={{ fontSize: 11, fill: "#888" }} axisLine={false} tickLine={false} width={55} />
-                    <Tooltip formatter={(v: number) => fmt(v)} contentStyle={{ background: "#1e1a17", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, fontSize: 12 }} />
+                    <Tooltip formatter={(v) => fmt(Number(v))} contentStyle={{ background: "#1e1a17", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, fontSize: 12 }} />
                     <Legend wrapperStyle={{ fontSize: 12 }} />
                     <Bar dataKey="Receitas" fill="#4ade80" radius={[3, 3, 0, 0]} />
                     <Bar dataKey="Despesas" fill="#f87171" radius={[3, 3, 0, 0]} />
@@ -199,10 +199,10 @@ export function RelatoriosClient({ transacoes, clientes, projetos }: RelatoriosC
                 ) : (
                   <ResponsiveContainer width="100%" height={200}>
                     <PieChart>
-                      <Pie data={porCategoria} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={75} label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`} labelLine={false} fontSize={11}>
+                      <Pie data={porCategoria} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={75} label={({ name, percent }) => `${name} ${((percent ?? 0) * 100).toFixed(0)}%`} labelLine={false} fontSize={11}>
                         {porCategoria.map((_, i) => <Cell key={i} fill={CORES[i % CORES.length]} />)}
                       </Pie>
-                      <Tooltip formatter={(v: number) => fmt(v)} contentStyle={{ background: "#1e1a17", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, fontSize: 12 }} />
+                      <Tooltip formatter={(v) => fmt(Number(v))} contentStyle={{ background: "#1e1a17", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 8, fontSize: 12 }} />
                     </PieChart>
                   </ResponsiveContainer>
                 )}
