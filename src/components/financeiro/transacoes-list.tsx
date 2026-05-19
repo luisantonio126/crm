@@ -53,8 +53,10 @@ export function TransacoesList({ transacoes, clientes, projetos, membros, tipoFi
     return matchSearch && matchStatus;
   });
 
+  const membroMap = Object.fromEntries(membros.map((m) => [m.id, m.nome]));
+
   const totalPendente = filtered.filter((t) => t.status === "pendente").reduce((s, t) => s + t.valor, 0);
-  const totalPago = filtered.filter((t) => t.status === "pago").reduce((s, t) => s + t.valor, 0);
+  const totalPago = filtered.filter((t) => t.status === "pago" && t.tipo === "receita").reduce((s, t) => s + t.valor, 0);
 
   function openNew() { setEditando(undefined); setDialogOpen(true); }
   function openEdit(t: Transacao) { setEditando(t); setDialogOpen(true); }
@@ -130,6 +132,7 @@ export function TransacoesList({ transacoes, clientes, projetos, membros, tipoFi
               <TableHead>Categoria</TableHead>
               <TableHead className="hidden md:table-cell">Vencimento</TableHead>
               <TableHead className="hidden lg:table-cell">Cliente / Projeto</TableHead>
+              <TableHead className="hidden lg:table-cell">Responsável</TableHead>
               <TableHead>Valor</TableHead>
               <TableHead>Status</TableHead>
               <TableHead className="w-[110px]">Ações</TableHead>
@@ -138,7 +141,7 @@ export function TransacoesList({ transacoes, clientes, projetos, membros, tipoFi
           <TableBody>
             {filtered.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={7} className="text-center py-12 text-muted-foreground">
+                <TableCell colSpan={8} className="text-center py-12 text-muted-foreground">
                   Nenhum lançamento encontrado.
                 </TableCell>
               </TableRow>
@@ -163,6 +166,9 @@ export function TransacoesList({ transacoes, clientes, projetos, membros, tipoFi
                       : t.projeto_id && projetoMap[t.projeto_id]
                         ? projetoMap[t.projeto_id]
                         : "—"}
+                  </TableCell>
+                  <TableCell className="hidden lg:table-cell text-sm text-muted-foreground">
+                    {t.membro_id && membroMap[t.membro_id] ? membroMap[t.membro_id] : "—"}
                   </TableCell>
                   <TableCell className={`font-semibold text-sm ${t.tipo === "receita" ? "text-green-400" : "text-red-400"}`}>
                     {t.valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
