@@ -12,6 +12,8 @@ import {
   Settings,
   Building2,
   LogOut,
+  MessageSquare,
+  BarChart3,
 } from "lucide-react";
 import {
   Sidebar,
@@ -34,6 +36,8 @@ const navMain = [
   { title: "Clientes", url: "/clientes", icon: Users },
   { title: "Projetos", url: "/projetos", icon: KanbanSquare },
   { title: "Calendário", url: "/calendario", icon: Calendar },
+  { title: "Mensagens", url: "/chat", icon: MessageSquare },
+  { title: "Relatórios", url: "/relatorios", icon: BarChart3 },
 ];
 
 const navFinanceiro = [

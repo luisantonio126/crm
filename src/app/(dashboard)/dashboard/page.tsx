@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Users, KanbanSquare, TrendingUp, AlertCircle } from "lucide-react";
 import { FluxoChart } from "@/components/financeiro/fluxo-chart";
+import { gerarNotificacoes } from "@/lib/notificacoes";
 import type { Transacao } from "@/types";
 
 function gerarDadosMensais(transacoes: Transacao[]) {
@@ -65,9 +66,14 @@ export default async function DashboardPage() {
   const dadosMensais = gerarDadosMensais(tx);
   const fmt = (v: number) => v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
+  const notificacoes = gerarNotificacoes(
+    tx.filter((t) => t.status === "pendente"),
+    projetos ?? []
+  );
+
   return (
     <>
-      <Header title="Dashboard" userEmail={user?.email} />
+      <Header title="Dashboard" userEmail={user?.email} notificacoes={notificacoes} />
       <main className="flex-1 p-6 space-y-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <Card className="border-border/60">
