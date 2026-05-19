@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useEffect, useTransition } from "react";
 import {
   DndContext,
   DragEndEvent,
@@ -37,6 +37,10 @@ interface KanbanBoardProps {
 export function KanbanBoard({ projetos: initialProjetos, clientes, membros }: KanbanBoardProps) {
   const [projetos, setProjetos] = useState(initialProjetos);
   const [activeId, setActiveId] = useState<string | null>(null);
+
+  useEffect(() => {
+    setProjetos(initialProjetos);
+  }, [initialProjetos]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingProjeto, setEditingProjeto] = useState<Projeto | undefined>();
   const [statusInicial, setStatusInicial] = useState<string>("backlog");
