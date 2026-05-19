@@ -113,7 +113,11 @@ export function ProjetoDialog({ open, onClose, projeto, clientes, statusInicial 
           <div className="flex flex-col gap-1.5">
             <Label>Cliente</Label>
             <Select value={form.cliente_id || "_none"} onValueChange={(v) => set("cliente_id", v === "_none" ? "" : v)}>
-              <SelectTrigger><SelectValue placeholder="Nenhum" /></SelectTrigger>
+              <SelectTrigger>
+                <span className="truncate text-sm">
+                  {clientes.find((c) => c.id === form.cliente_id)?.nome ?? <span className="text-muted-foreground">Nenhum</span>}
+                </span>
+              </SelectTrigger>
               <SelectContent>
                 <SelectItem value="_none">Nenhum</SelectItem>
                 {clientes.map((c) => (

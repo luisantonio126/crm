@@ -99,7 +99,11 @@ export function TransacaoDialog({ open, onClose, transacao, tipoInicial = "recei
             <div className="flex flex-col gap-1.5">
               <Label>Categoria</Label>
               <Select value={form.categoria || "_none"} onValueChange={(v) => set("categoria", v === "_none" ? "" : v)}>
-                <SelectTrigger><SelectValue placeholder="Nenhum" /></SelectTrigger>
+                <SelectTrigger>
+                  <span className="truncate text-sm">
+                    {form.categoria || <span className="text-muted-foreground">Nenhum</span>}
+                  </span>
+                </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="_none">Nenhum</SelectItem>
                   {categorias.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}

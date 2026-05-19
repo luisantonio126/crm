@@ -128,7 +128,11 @@ export function EventoDialog({ open, onClose, evento, dataInicial, clientes, pro
             <div className="flex flex-col gap-1.5">
               <Label>Cliente</Label>
               <Select value={form.cliente_id || "_none"} onValueChange={(v) => set("cliente_id", v === "_none" ? "" : v)}>
-                <SelectTrigger><SelectValue placeholder="Nenhum" /></SelectTrigger>
+                <SelectTrigger>
+                  <span className="truncate text-sm">
+                    {clientes.find((c) => c.id === form.cliente_id)?.nome ?? <span className="text-muted-foreground">Nenhum</span>}
+                  </span>
+                </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="_none">Nenhum</SelectItem>
                   {clientes.map((c) => <SelectItem key={c.id} value={c.id}>{c.nome}</SelectItem>)}
@@ -138,7 +142,11 @@ export function EventoDialog({ open, onClose, evento, dataInicial, clientes, pro
             <div className="flex flex-col gap-1.5">
               <Label>Projeto</Label>
               <Select value={form.projeto_id || "_none"} onValueChange={(v) => set("projeto_id", v === "_none" ? "" : v)}>
-                <SelectTrigger><SelectValue placeholder="Nenhum" /></SelectTrigger>
+                <SelectTrigger>
+                  <span className="truncate text-sm">
+                    {projetos.find((p) => p.id === form.projeto_id)?.nome ?? <span className="text-muted-foreground">Nenhum</span>}
+                  </span>
+                </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="_none">Nenhum</SelectItem>
                   {projetos.map((p) => <SelectItem key={p.id} value={p.id}>{p.nome}</SelectItem>)}
