@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { Bell } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
   Popover, PopoverContent, PopoverTrigger,
@@ -40,15 +39,13 @@ export function Notifications({ notificacoes }: NotificationsProps) {
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button variant="ghost" size="icon" className="h-8 w-8 relative">
-          <Bell className="w-4 h-4" />
-          {total > 0 && (
-            <span className={`absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full text-[10px] font-bold flex items-center justify-center text-white ${urgentes > 0 ? "bg-destructive" : "bg-primary"}`}>
-              {total > 9 ? "9+" : total}
-            </span>
-          )}
-        </Button>
+      <PopoverTrigger className="inline-flex items-center justify-center h-8 w-8 relative rounded-lg hover:bg-muted transition-colors">
+        <Bell className="w-4 h-4" />
+        {total > 0 && (
+          <span className={`absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full text-[10px] font-bold flex items-center justify-center text-white ${urgentes > 0 ? "bg-destructive" : "bg-primary"}`}>
+            {total > 9 ? "9+" : total}
+          </span>
+        )}
       </PopoverTrigger>
       <PopoverContent align="end" className="w-80 p-0">
         <div className="p-3 border-b border-border">

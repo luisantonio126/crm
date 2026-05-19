@@ -162,13 +162,11 @@ export function CalendarView({ eventos, transacoes, projetos, clientes }: Calend
                   <div className="space-y-0.5">
                     {dayItems.slice(0, 3).map((item) => (
                       <Popover key={item.id}>
-                        <PopoverTrigger asChild>
-                          <div
-                            onClick={(e) => e.stopPropagation()}
-                            className={`text-[10px] px-1 py-0.5 rounded truncate text-white cursor-pointer ${tipoColor[item.tipo]}`}
-                          >
-                            {item.titulo}
-                          </div>
+                        <PopoverTrigger
+                          onClick={(e) => e.stopPropagation()}
+                          className={`text-[10px] px-1 py-0.5 rounded truncate text-white cursor-pointer w-full text-left border-0 bg-transparent p-0 ${tipoColor[item.tipo]}`}
+                        >
+                          {item.titulo}
                         </PopoverTrigger>
                         <PopoverContent className="w-56 p-3" onClick={(e) => e.stopPropagation()}>
                           <div className="space-y-2">

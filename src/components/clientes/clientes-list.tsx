@@ -2,7 +2,8 @@
 
 import { useState, useTransition } from "react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -134,11 +135,9 @@ export function ClientesList({ clientes }: ClientesListProps) {
                   </TableCell>
                   <TableCell onClick={(e) => e.stopPropagation()}>
                     <div className="flex items-center gap-1">
-                      <Button variant="ghost" size="icon" className="h-7 w-7" asChild>
-                        <Link href={`/clientes/${cliente.id}`}>
-                          <Eye className="w-3.5 h-3.5" />
-                        </Link>
-                      </Button>
+                      <Link href={`/clientes/${cliente.id}`} className={cn(buttonVariants({ variant: "ghost", size: "icon" }), "h-7 w-7")}>
+                        <Eye className="w-3.5 h-3.5" />
+                      </Link>
                       <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => openEdit(cliente)}>
                         <Pencil className="w-3.5 h-3.5" />
                       </Button>
