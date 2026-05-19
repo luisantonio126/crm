@@ -76,9 +76,32 @@ export function RelatoriosClient({ transacoes, clientes, projetos }: RelatoriosC
   const dadosProjetos = Object.entries(statusCount).map(([name, value]) => ({ name, value }));
 
   const statusLabel: Record<string, string> = {
-    backlog: "Backlog", em_andamento: "Em Andamento", revisao: "Revisão",
-    concluido: "Concluído", cancelado: "Cancelado",
+    novo_lead: "Novo Lead", avaliacao_marcada: "Avaliação Marcada",
+    laudo: "Laudo", finalizado: "Finalizado",
   };
+
+  // Despesas por tipo
+  const despesasPorTipo = Object.entries(
+    despesas.filter((t) => t.status === "pago").reduce<Record<string, number>>((acc, t) => {
+      const tipo = t.categoria ?? "Outros";
+      acc[tipo] = (acc[tipo] ?? 0) + t.valor;
+      return acc;
+    }, {})
+  ).map(([tipo, total]) => ({ tipo, total })).sort((a, b) => b.total - a.total);
+
+  // Recebidos por cliente
+  const clienteMap = Object.fromEntries(clientes.map((c) => [c.id, c.nome]));
+  const recebidosPorCliente = Object.entries(
+    receitas.filter((t) => t.status === "pago" && t.cliente_id).reduce<Record<string, { total: number; lancamentos: number }>>((acc, t) => {
+      const id = t.cliente_id!;
+      if (!acc[id]) acc[id] = { total: 0, lancamentos: 0 };
+      acc[id].total += t.valor;
+      acc[id].lancamentos += 1;
+      return acc;
+    }, {})
+  )
+    .map(([id, v]) => ({ cliente: clienteMap[id] ?? "Desconhecido", ...v }))
+    .sort((a, b) => b.total - a.total);
 
   // Exportações
   function exportarTransacoes() {
@@ -186,6 +209,36 @@ export function RelatoriosClient({ transacoes, clientes, projetos }: RelatoriosC
               </CardContent>
             </Card>
           </div>
+
+          <Card className="border-border/60">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium flex items-center gap-2">
+                <TrendingDown className="w-4 h-4 text-red-400" />
+                Despesas por Tipo
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {despesasPorTipo.length === 0 ? (
+                <p className="text-sm text-muted-foreground text-center py-6">Nenhuma despesa registrada</p>
+              ) : (
+                <div className="space-y-2">
+                  {despesasPorTipo.map((d) => {
+                    const pct = totalPago > 0 ? (d.total / totalPago) * 100 : 0;
+                    return (
+                      <div key={d.tipo} className="flex items-center gap-3">
+                        <span className="text-sm w-28 shrink-0">{d.tipo}</span>
+                        <div className="flex-1 bg-muted/30 rounded-full h-2">
+                          <div className="bg-red-400/70 h-2 rounded-full" style={{ width: `${pct}%` }} />
+                        </div>
+                        <span className="text-sm font-semibold text-red-400 w-28 text-right shrink-0">{fmt(d.total)}</span>
+                        <span className="text-xs text-muted-foreground w-10 text-right shrink-0">{pct.toFixed(0)}%</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </CardContent>
+          </Card>
         </TabsContent>
 
         {/* ABA PROJETOS */}
@@ -260,6 +313,46 @@ export function RelatoriosClient({ transacoes, clientes, projetos }: RelatoriosC
                   </div>
                 ))}
               </div>
+            </CardContent>
+          </Card>
+
+          <Card className="border-border/60">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium flex items-center gap-2">
+                <TrendingUp className="w-4 h-4 text-green-400" />
+                Recebidos por Cliente
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {recebidosPorCliente.length === 0 ? (
+                <p className="text-sm text-muted-foreground text-center py-6">Nenhum recebimento com cliente vinculado</p>
+              ) : (
+                <div className="rounded-lg border border-border/40 overflow-hidden">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="bg-muted/30 text-muted-foreground text-xs">
+                        <th className="text-left p-3 font-medium">Cliente</th>
+                        <th className="text-center p-3 font-medium">Lançamentos</th>
+                        <th className="text-right p-3 font-medium">Total Recebido</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {recebidosPorCliente.map((r, i) => (
+                        <tr key={i} className="border-t border-border/40 hover:bg-muted/20">
+                          <td className="p-3 font-medium">{r.cliente}</td>
+                          <td className="p-3 text-center text-muted-foreground">{r.lancamentos}</td>
+                          <td className="p-3 text-right font-semibold text-green-400">{fmt(r.total)}</td>
+                        </tr>
+                      ))}
+                      <tr className="border-t border-border/60 bg-muted/10">
+                        <td className="p-3 font-semibold">Total</td>
+                        <td className="p-3 text-center font-semibold">{recebidosPorCliente.reduce((s, r) => s + r.lancamentos, 0)}</td>
+                        <td className="p-3 text-right font-semibold text-green-400">{fmt(recebidosPorCliente.reduce((s, r) => s + r.total, 0))}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>
